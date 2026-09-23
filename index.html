@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Askly - Offline Q&A</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    color: #172033;
+    background:
+        radial-gradient(circle at 10% 10%, #ffd6e8, transparent 28%),
+        radial-gradient(circle at 90% 15%, #c9f4ff, transparent 30%),
+        radial-gradient(circle at 50% 100%, #e5d5ff, transparent 35%),
+        #f8f9ff;
+}
+
+/* NAVBAR */
+
+nav {
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.logoIcon {
+    width: 43px;
+    height: 43px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    box-shadow: 0 10px 25px rgba(124,58,237,.25);
+}
+
+.status {
+    padding: 9px 15px;
+    border-radius: 30px;
+    background: white;
+    border: 1px solid #e5e6ef;
+    font-size: 13px;
+    color: #62697b;
+}
+
+/* HERO */
+
+.hero {
+    max-width: 900px;
+    margin: 65px auto 0;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 30px;
+    background: rgba(255,255,255,.8);
+    border: 1px solid #e4e5ee;
+    color: #7040d8;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.greenDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+}
+
+h1 {
+    margin-top: 22px;
+    font-size: clamp(44px, 8vw, 78px);
+    line-height: .98;
+    letter-spacing: -4px;
+}
+
+h1 span {
+    background: linear-gradient(
+        90deg,
+        #7c3aed,
+        #ec4899,
+        #f97316,
+        #0ea5e9
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.description {
+    max-width: 650px;
+    margin: 22px auto 0;
+    color: #6c7387;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+/* SEARCH */
+
+.searchArea {
+    max-width: 820px;
+    margin: 40px auto 0;
+    padding: 0 20px;
+}
+
+.searchBox {
+    display: flex;
+    gap: 10px;
+    padding: 9px;
+    background: rgba(255,255,255,.92);
+    border: 1px solid #dedfea;
+    border-radius: 24px;
+    box-shadow: 0 25px 70px rgba(45,40,90,.12);
+}
+
+#questionInput {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 18px;
+    font-size: 16px;
+}
+
+#askButton {
+    border: none;
+    border-radius: 17px;
+    padding: 0 28px;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    transition: .2s;
+}
+
+#askButton:hover {
+    transform: translateY(-2px);
+}
+
+#askButton:active {
+    transform: scale(.97);
+}
+
+/* SUGGESTIONS */
+
+.suggestions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 17px;
+}
+
+.suggestion {
+    border: 1px solid #dddfea;
+    background: rgba(255,255,255,.8);
+    color: #5e6578;
+    padding: 10px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.suggestion:hover {
+    color: #713bd4;
+    border-color: #cfc1ff;
+    transform: translateY(-2px);
+}
+
+/* ANSWER */
+
+.answerSection {
+    max-width: 820px;
+    margin: 30px auto 0;
+    padding: 0 20px;
+    display: none;
+}
+
+.answerCard {
+    background: white;
+    border: 1px solid #e5e6ef;
+    border-radius: 25px;
+    padding: 28px;
+    box-shadow: 0 20px 55px rgba(40,40,80,.1);
+    animation: answerAppear .35s ease;
+}
+
+@keyframes answerAppear {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.answerHeader {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 17px;
+}
+
+.answerIcon {
+    width: 47px;
+    height: 47px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: #eee8ff;
+    font-size: 21px;
+}
+
+.answerTitle {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.answerSubtitle {
+    color: #999eae;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+#answerText {
+    color: #555d72;
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+/* FEATURE SECTION */
+
+.features {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 0 20px;
+}
+
+.sectionTitle {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sectionTitle h2 {
+    font-size: 30px;
+}
+
+.sectionTitle p {
+    margin-top: 8px;
+    color: #7d8395;
+}
+
+.featureGrid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 17px;
+}
+
+.feature {
+    padding: 24px;
+    border-radius: 22px;
+    background: rgba(255,255,255,.8);
+    border: 1px solid #e4e5ee;
+    transition: .2s;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(40,40,80,.08);
+}
+
+.featureIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 16px;
+}
+
+.purple {
+    background: #eee8ff;
+}
+
+.pink {
+    background: #ffe6f0;
+}
+
+.blue {
+    background: #e3f6ff;
+}
+
+.feature h3 {
+    margin-bottom: 8px;
+}
+
+.feature p {
+    color: #777e91;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+/* TOPICS */
+
+.topics {
+    max-width: 1000px;
+    margin: 0 auto 80px;
+    padding: 0 20px;
+}
+
+.topics h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.topicGrid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 12px;
+}
+
+.topicButton {
+    border: 1px solid #e2e3ed;
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.topicButton:hover {
+    transform: translateY(-4px);
+    border-color: #cfc0ff;
+}
+
+.topicButton span {
+    display: block;
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.topicButton p {
+    color: #666d80;
+    font-size: 13px;
+}
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    padding: 35px 20px;
+    border-top: 1px solid #e4e5ed;
+    color: #9297a8;
+    font-size: 13px;
+}
+
+footer strong {
+    color: #713bd4;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    nav {
+        padding: 17px 5%;
+    }
+
+    .status {
+        display: none;
+    }
+
+    .hero {
+        margin-top: 45px;
+    }
+
+    h1 {
+        letter-spacing: -2px;
+    }
+
+    .description {
+        font-size: 15px;
+    }
+
+    .searchBox {
+        flex-direction: column;
+    }
+
+    #askButton {
+        height: 53px;
+    }
+
+    .featureGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .topicGrid {
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<!-- NAVIGATION -->
+
+<nav>
+
+    <div class="logo">
+        <div class="logoIcon">✦</div>
+        Askly
+    </div>
+
+    <div class="status">
+        ● Works Offline
+    </div>
+
+</nav>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    </div>
+
+    <h1>
+        Ask a question.<br>
+        <span>Get an answer.</span>
+    </h1>
+
+    <p class="description">
+        Askly is a lightweight question companion that works
+        directly inside your browser. Built by ChosenDev.
+    </p>
+
+</section>
+
+
+<!-- SEARCH -->
+
+<section class="searchArea">
+
+    <div class="searchBox">
+
+        <input
+            id="questionInput"
+            type="text"
+            placeholder="Ask something like: What is JavaScript?"
+            autocomplete="off"
+        >
+
+        <button id="askButton">
+            Ask ✨
+        </button>
+
+    </div>
+
+
+    <div class="suggestions">
+
+        <button class="suggestion"
+            data-question="What is HTML?">
+            What is HTML?
+        </button>
+
+        <button class="suggestion"
+            data-question="What is JavaScript?">
+            What is JavaScript?
+        </button>
+
+        <button class="suggestion"
+            data-question="What is AI?">
+            What is AI?
+        </button>
+
+        <button class="suggestion"
+            data-question="What is renewable energy?">
+            Renewable energy?
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ANSWER -->
+
+<section class="answerSection" id="answerSection">
+
+    <div class="answerCard">
+
+        <div class="answerHeader">
+
+            <div class="answerIcon">
+                💡
+            </div>
+
+            <div>
+
+                <div class="answerTitle">
+                    Askly's Answer
+                </div>
+
+                <div class="answerSubtitle">
+                    From Askly's built-in knowledge
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="answerText"></div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURES -->
+
+<section class="features">
+
+    <div class="sectionTitle">
+
+        <h2>Simple by design</h2>
+
+        <p>
+            Everything runs inside one webpage.
+        </p>
+
+    </div>
+
+
+    <div class="featureGrid">
+
+        <div class="feature">
+
+            <div class="featureIcon purple">
+                ⚡
+            </div>
+
+            <h3>Instant</h3>
+
+            <p>
+                Answers are processed immediately in your
+                browser using JavaScript.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="featureIcon pink">
+                🔒
+            </div>
+
+            <h3>Private</h3>
+
+            <p>
+                Questions don't need to be sent to a remote
+                server.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="featureIcon blue">
+                🌐
+            </div>
+
+            <h3>Offline</h3>
+
+            <p>
+                Once saved, the website can run without an
+                internet connection.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- TOPICS -->
+
+<section class="topics">
+
+    <h2>Try a topic</h2>
+
+    <div class="topicGrid">
+
+        <button class="topicButton"
+            data-question="What is programming?">
+
+            <span>💻</span>
+            <p>Programming</p>
+
+        </button>
+
+
+        <button class="topicButton"
+            data-question="What is renewable energy?">
+
+            <span>🌱</span>
+            <p>Renewable Energy</p>
+
+        </button>
+
+
+        <button class="topicButton"
+            data-question="What is mathematics?">
+
+            <span>🔢</span>
+            <p>Mathematics</p>
+
+        </button>
+
+
+        <button class="topicButton"
+            data-question="What is artificial intelligence?">
+
+            <span>🤖</span>
+            <p>Artificial Intelligence</p>
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+    
+     <strong> Work in progress, more features coming soon!</strong>
+
+</footer>
+
+
+<script>
+
+/*
+====================================================
+ASKLY KNOWLEDGE BASE
+====================================================
+*/
+
+const knowledge = {
+
+    "html":
+        "HTML stands for HyperText Markup Language. It is used to create the structure of webpages, including headings, paragraphs, images, links, forms and buttons.",
+
+    "css":
+        "CSS stands for Cascading Style Sheets. It controls how webpages look, including colors, fonts, spacing, layouts, animations and responsive designs.",
+
+    "javascript":
+        "JavaScript is a programming language used to make websites interactive. It can respond to clicks, process information, change webpage content and create dynamic experiences.",
+
+    "programming":
+        "Programming is the process of writing instructions that computers can understand and execute. Languages such as JavaScript, Python, Java and C++ are used for programming.",
+
+    "python":
+        "Python is a popular programming language known for its simple and readable syntax. It is used for web development, automation, data analysis, artificial intelligence and many other areas.",
+
+    "artificial intelligence":
+        "Artificial Intelligence, or AI, is a field of computing focused on creating systems that can perform tasks that normally require abilities such as recognizing patterns, understanding language and solving problems.",
+
+    "ai":
+        "AI stands for Artificial Intelligence. It refers to computer systems designed to perform tasks that can involve learning, reasoning, recognizing patterns and understanding information.",
+
+    "renewable energy":
+        "Renewable energy comes from sources that are naturally replenished, such as sunlight, wind, flowing water, geothermal heat and biomass.",
+
+    "solar energy":
+        "Solar energy is energy obtained from sunlight. Solar panels can convert sunlight into electricity, while solar thermal systems can use sunlight to produce heat.",
+
+    "wind energy":
+        "Wind energy uses moving air to turn turbines. The turbines drive generators that produce electricity.",
+
+    "biogas":
+        "Biogas is a renewable gas produced when organic materials such as food waste, agricultural waste and animal manure break down without oxygen. It can be used for cooking, heating and generating electricity.",
+
+    "mathematics":
+        "Mathematics is the study of numbers, quantities, patterns, shapes, structures and relationships. It is used in science, engineering, technology, economics and everyday life.",
+
+    "computer":
+        "A computer is an electronic device that receives data, processes it according to instructions, stores information and produces results.",
+
+    "internet":
+        "The internet is a worldwide network of connected computer systems that communicate with one another. It allows people to access websites and exchange information.",
+
+    "website":
+        "A website is a collection of webpages and resources that can be accessed through a web browser. Websites can be built using HTML, CSS and JavaScript.",
+
+    "web development":
+        "Web development is the process of creating and maintaining websites and web applications. It commonly involves HTML, CSS and JavaScript.",
+
+    "database":
+        "A database is an organized system used to store, manage and retrieve information.",
+
+    "algorithm":
+        "An algorithm is a step-by-step set of instructions for solving a problem or completing a task.",
+
+    "data":
+        "Data is information that can be collected, stored, processed and analyzed. It can include numbers, text, images and measurements.",
+
+    "data analysis":
+        "Data analysis is the process of examining data to discover patterns, useful information and insights that can support decisions.",
+
+    "software":
+        "Software is a collection of programs and instructions that tell a computer or device what to do.",
+
+    "hardware":
+        "Hardware refers to the physical parts of a computer or electronic device, such as the processor, memory, storage, keyboard and display.",
+
+    "cloud computing":
+        "Cloud computing means using computing resources such as servers, storage and software over a network instead of relying only on your own computer.",
+
+    "hello":
+        "Hello! 👋 I'm Askly. Ask me about programming, renewable energy, AI, mathematics, computers and other topics in my built-in knowledge.",
+
+    "hi":
+        "Hi! 👋 Ask me a question and I'll search my built-in knowledge for an answer.",
+
+    "who are you":
+        "I'm Askly, a small offline question-and-answer website. I don't connect to an API. My answers are stored directly inside this webpage."
+
+};
+
+
+/*
+====================================================
+QUESTION NORMALIZATION
+====================================================
+*/
+
+function cleanQuestion(question) {
+
+    return question
+        .toLowerCase()
+        .trim()
+        .replace(/[?!.,]/g, "")
+        .replace(/\s+/g, " ");
+
+}
+
+
+/*
+====================================================
+FIND ANSWER
+====================================================
+*/
+
+function findAnswer(question) {
+
+    const cleaned = cleanQuestion(question);
+
+
+    // Exact match
+
+    if (knowledge[cleaned]) {
+        return knowledge[cleaned];
+    }
+
+
+    /*
+    Check whether the question contains
+    one of the knowledge keywords.
+    */
+
+    const keywords = Object.keys(knowledge);
+
+    for (let keyword of keywords) {
+
+        if (cleaned.includes(keyword)) {
+
+            return knowledge[keyword];
+
+        }
+
+    }
+
+
+    /*
+    Additional common phrases
+    */
+
+    if (
+        cleaned.includes("what does") &&
+        cleaned.includes("html")
+    ) {
+        return knowledge["html"];
+    }
+
+
+    if (
+        cleaned.includes("tell me about") &&
+        cleaned.includes("javascript")
+    ) {
+        return knowledge["javascript"];
+    }
+
+
+    if (
+        cleaned.includes("explain") &&
+        cleaned.includes("ai")
+    ) {
+        return knowledge["ai"];
+    }
+
+
+    return null;
+
+}
+
+
+/*
+====================================================
+SHOW ANSWER
+====================================================
+*/
+
+function showAnswer(answer) {
+
+    const answerSection =
+        document.getElementById("answerSection");
+
+    const answerText =
+        document.getElementById("answerText");
+
+
+    answerText.textContent = answer;
+
+    answerSection.style.display = "block";
+
+
+    // Re-run animation
+
+    const card =
+        document.querySelector(".answerCard");
+
+    card.style.animation = "none";
+
+    void card.offsetWidth;
+
+    card.style.animation =
+        "answerAppear .35s ease";
+
+
+    answerSection.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+}
+
+
+/*
+====================================================
+ASK QUESTION
+====================================================
+*/
+
+function askQuestion() {
+
+    const input =
+        document.getElementById("questionInput");
+
+    const question =
+        input.value.trim();
+
+
+    if (question === "") {
+
+        showAnswer(
+            "Please type a question first. For example, try asking: What is JavaScript?"
+        );
+
+        input.focus();
+
+        return;
+
+    }
+
+
+    const answer =
+        findAnswer(question);
+
+
+    if (answer) {
+
+        showAnswer(answer);
+
+    } else {
+
+        showAnswer(
+            "I don't have a built-in answer for that question yet. Try asking about HTML, CSS, JavaScript, programming, AI, renewable energy, biogas, mathematics, computers or data analysis."
+        );
+
+    }
+
+}
+
+
+/*
+====================================================
+ASK BUTTON
+====================================================
+*/
+
+document
+    .getElementById("askButton")
+    .addEventListener("click", askQuestion);
+
+
+/*
+====================================================
+ENTER KEY
+====================================================
+*/
+
+document
+    .getElementById("questionInput")
+    .addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            askQuestion();
+
+        }
+
+    });
+
+
+/*
+====================================================
+ALL SUGGESTION BUTTONS
+====================================================
+*/
+
+document
+    .querySelectorAll("[data-question]")
+    .forEach(function(button) {
+
+        button.addEventListener("click", function() {
+
+            const question =
+                button.getAttribute("data-question");
+
+
+            const input =
+                document.getElementById("questionInput");
+
+
+            input.value = question;
+
+            askQuestion();
+
+        });
+
+    });
+
+</script>
+
+</body>
+</html>
